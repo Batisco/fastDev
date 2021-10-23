@@ -14,13 +14,13 @@ public class Product {
 
     @Id
     @GeneratedValue
-    @Column(name = "product_id")
+    @Column(name = "product_id", nullable = false)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     public Product() {

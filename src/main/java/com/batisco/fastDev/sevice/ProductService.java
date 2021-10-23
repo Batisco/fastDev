@@ -1,14 +1,15 @@
 package com.batisco.fastDev.sevice;
 
 import com.batisco.fastDev.dal.ProductRepository;
-import com.batisco.fastDev.dto.ProductDto;
+
 import com.batisco.fastDev.model.Product;
+import com.batisco.fastDev.model.exceptions.UserAlreadyHaveProductException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -20,35 +21,29 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAll().stream().
-                map(this::mapToDto).
-                toList();
+    @Transactional(readOnly = true)
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
-    public void saveProduct(ProductDto product) {
-        productRepository.save(mapToProduct(product));
+    public Product addProduct(Product product) {
+        try {
+            return productRepository.save(product);
+        } catch(Exception e) {
+            throw new UserAlreadyHaveProductException(
+                    "User " + product.getUserId() + " already have product with name " + product.getName()
+            );
+        }
     }
 
+    @Transactional
+    public Product updateProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Transactional
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
-    }
-
-
-    private ProductDto mapToDto(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setId(product.getId());
-        dto.setUserId(product.getUserId());
-        dto.setName(product.getName());
-        return dto;
-    }
-
-    private Product mapToProduct(ProductDto dto) {
-        Product product = new Product();
-        product.setId(dto.getId());
-        product.setUserId(dto.getUserId());
-        product.setName(dto.getName());
-        return product;
     }
 
 }

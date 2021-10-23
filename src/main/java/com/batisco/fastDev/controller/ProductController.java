@@ -1,6 +1,7 @@
 package com.batisco.fastDev.controller;
 
 import com.batisco.fastDev.dto.ProductDto;
+import com.batisco.fastDev.sevice.DtoMapperService;
 import com.batisco.fastDev.sevice.ProductService;
 
 import org.slf4j.Logger;
@@ -21,39 +22,47 @@ public class ProductController {
 
 
     private ProductService productService;
+    private DtoMapperService mapper;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                             DtoMapperService mapper) {
         this.productService = productService;
+        this.mapper = mapper;
     }
 
-    @GetMapping
-    public List<ProductDto> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        logger.info("get all products");
+        List<ProductDto> response = productService.getAllProducts().stream().
+                map(mapper::mapToDto).
+                toList();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping
-    public ResponseEntity<String> saveProduct(@RequestBody ProductDto dto) {
-        try {
-            productService.saveProduct(dto);
-            logger.info("product data saved successfully. product ={}", dto);
-            return new ResponseEntity<>("product data saved successfully", HttpStatus.CREATED);
-        } catch(RuntimeException e) {
-            logger.error("Fail to save product {}", dto, e);
-            return new ResponseEntity<>("Fail to save product", HttpStatus.BAD_GATEWAY);
-        }
+    @PostMapping("/add")
+    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto dto) {
+        logger.info("Add new product = {}", dto);
+        ProductDto response = mapper.mapToDto(
+                productService.addProduct(mapper.mapToProduct(dto))
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping
+    @PostMapping("/update")
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto dto) {
+        logger.info("Update product = {}", dto);
+        ProductDto response = mapper.mapToDto(
+                productService.updateProduct(mapper.mapToProduct(dto))
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteProduct(@RequestParam Long productId) {
-        try {
-            productService.deleteProduct(productId);
-            logger.info("product data delete successfully. product id = {}", productId);
-            return new ResponseEntity<>("product data delete successfully", HttpStatus.CREATED);
-        } catch(RuntimeException e) {
-            logger.error("Fail to delete product with id={}", productId, e);
-            return new ResponseEntity<>("Fail to delete product", HttpStatus.BAD_GATEWAY);
-        }
+        logger.info("Delete product with id = {}", productId);
+        productService.deleteProduct(productId);
+        return new ResponseEntity<>("product data delete successfully", HttpStatus.OK);
     }
 
 }

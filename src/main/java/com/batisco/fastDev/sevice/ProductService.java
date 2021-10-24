@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository) {
@@ -26,19 +26,21 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Transactional
     public Product addProduct(Product product) {
         try {
-            return productRepository.save(product);
+            return productRepository.saveAndFlush(product);
         } catch(Exception e) {
             throw new UserAlreadyHaveProductException(
-                    "User " + product.getUserId() + " already have product with name " + product.getName()
+                    "User " + product.getUserId() + " already have product with name " + product.getName(),
+                    e
             );
         }
     }
 
     @Transactional
     public Product updateProduct(Product product) {
-        return productRepository.save(product);
+        return productRepository.saveAndFlush(product);
     }
 
     @Transactional

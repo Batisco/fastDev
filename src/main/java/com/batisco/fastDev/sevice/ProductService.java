@@ -6,6 +6,7 @@ import com.batisco.fastDev.model.Product;
 import com.batisco.fastDev.model.exceptions.UserAlreadyHaveProductException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +23,22 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getAllProducts() {
+    public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    @Transactional
+    public Product getByName(String name) {
+        return productRepository.getByName(name);
     }
 
     @Transactional
     public Product addProduct(Product product) {
         try {
             return productRepository.saveAndFlush(product);
-        } catch(Exception e) {
+        } catch(DataIntegrityViolationException e) {
             throw new UserAlreadyHaveProductException(
-                    "User " + product.getUserId() + " already have product with name " + product.getName(),
+                    "User " + product.getUser().getId() + " already have product with name " + product.getName(),
                     e
             );
         }

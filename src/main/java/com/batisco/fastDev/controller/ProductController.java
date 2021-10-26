@@ -21,8 +21,8 @@ public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class.getName());
 
 
-    private ProductService productService;
-    private DtoMapperService mapper;
+    private final ProductService productService;
+    private final DtoMapperService mapper;
 
     @Autowired
     public ProductController(ProductService productService,
@@ -34,16 +34,21 @@ public class ProductController {
     @GetMapping("/getAll")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         logger.info("get all products");
-        List<ProductDto> response = productService.getAllProducts().stream().
-                map(mapper::mapToDto).
-                toList();
+        List<ProductDto> response = mapper.mapProductsToDto(productService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/getByName")
+    public ResponseEntity<ProductDto> getByName(@RequestParam("name") String name) {
+        logger.info("get by name");
+        ProductDto response = mapper.mapProductToDto(productService.getByName(name));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/add")
     public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto dto) {
         logger.info("Add new product = {}", dto);
-        ProductDto response = mapper.mapToDto(
+        ProductDto response = mapper.mapProductToDto(
                 productService.addProduct(mapper.mapToProduct(dto))
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -52,7 +57,7 @@ public class ProductController {
     @PostMapping("/update")
     public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto dto) {
         logger.info("Update product = {}", dto);
-        ProductDto response = mapper.mapToDto(
+        ProductDto response = mapper.mapProductToDto(
                 productService.updateProduct(mapper.mapToProduct(dto))
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);

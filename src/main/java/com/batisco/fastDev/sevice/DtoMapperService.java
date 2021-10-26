@@ -1,21 +1,30 @@
 package com.batisco.fastDev.sevice;
 
+import com.batisco.fastDev.dto.AddedUserDto;
 import com.batisco.fastDev.dto.ProductDto;
+import com.batisco.fastDev.dto.UserDto;
 import com.batisco.fastDev.model.Product;
 
-import org.springframework.stereotype.Component;
+import com.batisco.fastDev.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.List;
+
+@Service
 public class DtoMapperService {
 
-    public DtoMapperService() {
+    private final UserService userService;
 
+    @Autowired
+    public DtoMapperService(UserService userService) {
+        this.userService = userService;
     }
 
-    public ProductDto mapToDto(Product product) {
+    public ProductDto mapProductToDto(Product product) {
         ProductDto dto = new ProductDto();
         dto.setId(product.getId());
-        dto.setUserId(product.getUserId());
+        dto.setUserId(product.getUser().getId());
         dto.setName(product.getName());
         return dto;
     }
@@ -23,9 +32,41 @@ public class DtoMapperService {
     public Product mapToProduct(ProductDto dto) {
         Product product = new Product();
         product.setId(dto.getId());
-        product.setUserId(dto.getUserId());
+        product.setUser(userService.getById(dto.getUserId()));
         product.setName(dto.getName());
         return product;
+    }
+
+    public List<ProductDto> mapProductsToDto(List<Product> products) {
+        return products.stream().
+                map(this::mapProductToDto).
+                toList();
+    }
+
+    public UserDto mapUserToDto(User user) {
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        return dto;
+    }
+
+    public List<UserDto> mapUsersToDto(List<User> users) {
+        return users.stream().
+                map(this::mapUserToDto).
+                toList();
+    }
+
+    public User mapToUser(UserDto dto) {
+        User user = new User();
+        user.setId(dto.getId());
+        user.setName(dto.getName());
+        return user;
+    }
+
+    public User mapToUser(AddedUserDto dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        return user;
     }
 
 }

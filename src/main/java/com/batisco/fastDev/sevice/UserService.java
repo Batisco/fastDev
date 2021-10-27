@@ -54,12 +54,12 @@ public class UserService {
     @Transactional
     public User update(User user) {
         try {
-            user.setId(UUID.randomUUID());
-
-            userRepository.updateUser(user);
-            userRepository.flush();
-
-            return user;
+            if(userRepository.existsById(user.getId())) {
+                userRepository.updateUser(user);
+                userRepository.flush();
+                return user;
+            }
+            throw new UnknownUserException("Unknown user with id = " + user.getId());
         } catch(DataIntegrityViolationException e) {
             throw new NotUniqueUserException("User with name " + user.getName() + " already exists");
         }

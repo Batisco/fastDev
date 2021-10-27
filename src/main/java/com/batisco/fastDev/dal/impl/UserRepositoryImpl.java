@@ -23,12 +23,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void addUser(User user) {
-        entityManager.merge(user);
+        entityManager.persist(user);
     }
 
     @Override
     public void updateUser(User user) {
         entityManager.merge(user);
+    }
+
+    @Override
+    public boolean existsById(UUID userId) {
+        return userId != null && entityManager.find(User.class, userId) != null;
     }
 
     @Override

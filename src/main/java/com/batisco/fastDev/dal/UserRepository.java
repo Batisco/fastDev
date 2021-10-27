@@ -12,6 +12,8 @@ public interface UserRepository {
 
     public void updateUser(User user);
 
+    public boolean existsById(UUID userId);
+
     public Optional<User> getById(UUID userId);
 
     public List<User> getAllUser();

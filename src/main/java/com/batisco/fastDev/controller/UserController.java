@@ -55,4 +55,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto) {
+        logger.info("update user = " + dto);
+        User user = mapper.mapToUser(dto);
+        UserDto response = mapper.mapUserToDto(userService.update(user));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

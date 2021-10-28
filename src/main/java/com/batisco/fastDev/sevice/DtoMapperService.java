@@ -26,6 +26,8 @@ public class DtoMapperService {
         dto.setId(product.getId());
         dto.setUserId(product.getUser().getId());
         dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
         return dto;
     }
 
@@ -34,6 +36,8 @@ public class DtoMapperService {
         product.setId(dto.getId());
         product.setUser(userService.getById(dto.getUserId()));
         product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setDescription(dto.getDescription());
         return product;
     }
 

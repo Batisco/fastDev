@@ -2,8 +2,8 @@ package com.batisco.fastDev.model;
 
 import javax.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(
@@ -23,6 +23,12 @@ public class Product {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "price", nullable = false, columnDefinition = "default 0")
+    private BigDecimal price;
+
+    @Column(name = "description")
+    private String description;
 
     public Product() {
 
@@ -52,6 +58,22 @@ public class Product {
         this.name = name;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +93,8 @@ public class Product {
                 "id=" + id +
                 ", user=" + user +
                 ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
                 '}';
     }
 

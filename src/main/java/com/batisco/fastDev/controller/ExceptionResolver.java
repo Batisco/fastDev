@@ -1,9 +1,6 @@
 package com.batisco.fastDev.controller;
 
-import com.batisco.fastDev.model.exceptions.IncorrectProductNameException;
-import com.batisco.fastDev.model.exceptions.NotUniqueUserException;
-import com.batisco.fastDev.model.exceptions.UnknownUserException;
-import com.batisco.fastDev.model.exceptions.UserAlreadyHaveProductException;
+import com.batisco.fastDev.model.exceptions.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +24,14 @@ public class ExceptionResolver {
         return ResponseEntity.
                 status(HttpStatus.INTERNAL_SERVER_ERROR).
                 body(new ResponseException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
+    }
+
+    @ExceptionHandler(value = NegativeValueException.class)
+    public ResponseEntity<ResponseException> handle(NegativeValueException e) {
+        logger.error("Negative value exception", e);
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
     @ExceptionHandler(value = NotUniqueUserException.class)

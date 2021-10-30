@@ -1,3 +1,17 @@
+html {
+  font-size: 16px;
+  font-family: Open Sans;
+  letter-spacing: 1px;
+  background-color: #f57242;
+}
+button:hover {
+    background: #fabca5;
+}
+button {
+    background: white;
+}
+
+
 .usersTable {
 	width: 100%;
 	margin-bottom: 20px;
@@ -16,4 +30,41 @@
 	padding: 5px;
 	border: none;
 	border-bottom: 5px solid #F2F8F8;
+}
+
+
+.usersTable caption {
+    color: white;
+    text-align: left;
+    padding: 5px 20px;
+    caption-side: top;
+}
+.usersTable caption h1 {
+    margin: 0;
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+}
+.buttonCaption {
+    color: #f57242;
+    border: none;
+    font-size: 22px;
+    border-radius: 16px;
+    padding: 6px;
+    width: 130px;
+}
+.buttonCaption img {
+    display: inline-block;
+    margin: 0 4px;
+    width: 20px;
+    height: auto;
+}
+
+
+.buttonUpdate img {
+    display: block;
+    color: #f57242;
+    margin: 0;
+    width: 20px;
+    height: auto;
 }

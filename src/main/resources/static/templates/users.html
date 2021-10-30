@@ -4,15 +4,21 @@
         <meta charset="UTF-8">
         <title>Title</title>
         <link rel="stylesheet" href="/css/users.css"/>
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans'>
     </head>
 
     <body>
         <table class="usersTable">
-            <caption>Users</caption>
+            <caption>
+                <button class="buttonCaption" id="addUserButton"><img src="/imgs/add.svg"/>Add</button>
+                <button class="buttonCaption" id="refreshTableButton"><img src="/imgs/refresh.svg"/>Refresh</button>
+                <h1>Users</h1>
+            </caption>
             <thead>
                 <tr>
                     <th>id</th>
                     <th>name</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="usersTableBody">

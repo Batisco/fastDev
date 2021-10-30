@@ -20,7 +20,20 @@ public class UsersUIController {
 
     @GetMapping("/getAll")
     public String getAll() {
+        logger.info("Get form for all users");
         return "/templates/users.html";
+    }
+
+    @GetMapping("/getUpdateForm")
+    public String getUpdateForm() {
+        logger.info("Get update form for user");
+        return "/templates/updatedUser.html";
+    }
+
+    @GetMapping("/getAddedForm")
+    public String getAddedForm() {
+        logger.info("Get added form for user");
+        return "/templates/addedUser.html";
     }
 
 }

@@ -50,22 +50,6 @@ public class ExceptionResolver {
                 body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
-    @ExceptionHandler(value = IncorrectProductNameException.class)
-    public ResponseEntity<ResponseException> handle(IncorrectProductNameException e) {
-        logger.error("Incorrect product name exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = UserAlreadyHaveProductException.class)
-    public ResponseEntity<ResponseException> handle(UserAlreadyHaveProductException e) {
-        logger.error("User already have product with this name", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
 
     public static class ResponseException {
 

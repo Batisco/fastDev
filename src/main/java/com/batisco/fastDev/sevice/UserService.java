@@ -1,10 +1,10 @@
 package com.batisco.fastDev.sevice;
 
 import com.batisco.fastDev.dal.UserRepository;
-import com.batisco.fastDev.dto.AddedUserDto;
 import com.batisco.fastDev.model.User;
 import com.batisco.fastDev.model.exceptions.NotUniqueUserException;
 import com.batisco.fastDev.model.exceptions.UnknownUserException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

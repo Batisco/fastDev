@@ -42,25 +42,17 @@ public class ExceptionResolver {
                 body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
+    @ExceptionHandler(value = UnknownApartmentException.class)
+    public ResponseEntity<ResponseException> handle(UnknownApartmentException e) {
+        logger.error("Unknown apartment exception", e);
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
+    }
+
     @ExceptionHandler(value = UnknownUserException.class)
     public ResponseEntity<ResponseException> handle(UnknownUserException e) {
         logger.error("Unknown user exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = IncorrectProductNameException.class)
-    public ResponseEntity<ResponseException> handle(IncorrectProductNameException e) {
-        logger.error("Incorrect product name exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = UserAlreadyHaveProductException.class)
-    public ResponseEntity<ResponseException> handle(UserAlreadyHaveProductException e) {
-        logger.error("User already have product with this name", e);
         return ResponseEntity.
                 status(HttpStatus.BAD_REQUEST).
                 body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));

@@ -33,6 +33,6 @@ function fillRow(user, row) {
     );
 
     row.lastElementChild.firstElementChild.onclick = function() {
-        window.location.replace("/ui/users/getUpdateForm");
+        window.location.replace(`/ui/users/getUpdateForm?id=${user.id}`);
     }
 }

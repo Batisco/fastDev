@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OrderDto {
+public class UpdatedOrderDto {
 
     private UUID id;
-    private UserDto user;
-    private List<ApartmentDto> apartments;
+    private UUID user;
+    private List<UUID> apartments;
     private OrderState state;
     private BigDecimal price;
     private String description;
 
-    public OrderDto() {
+    public UpdatedOrderDto() {
 
     }
 
@@ -28,19 +28,19 @@ public class OrderDto {
         this.id = id;
     }
 
-    public UserDto getUser() {
+    public UUID getUser() {
         return user;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(UUID user) {
         this.user = user;
     }
 
-    public List<ApartmentDto> getApartments() {
+    public List<UUID> getApartments() {
         return apartments;
     }
 
-    public void setApartments(List<ApartmentDto> apartments) {
+    public void setApartments(List<UUID> apartments) {
         this.apartments = apartments;
     }
 
@@ -72,13 +72,13 @@ public class OrderDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderDto orderDto = (OrderDto) o;
-        return Objects.equals(id, orderDto.id) &&
-                Objects.equals(user, orderDto.user) &&
-                Objects.equals(apartments, orderDto.apartments) &&
-                state == orderDto.state &&
-                Objects.equals(price, orderDto.price) &&
-                Objects.equals(description, orderDto.description);
+        UpdatedOrderDto that = (UpdatedOrderDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(apartments, that.apartments) &&
+                state == that.state &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(description, that.description);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class OrderDto {
 
     @Override
     public String toString() {
-        return "OrderDto{" +
+        return "UpdatedOrderDto{" +
                 "id=" + id +
                 ", user=" + user +
                 ", apartments=" + apartments +

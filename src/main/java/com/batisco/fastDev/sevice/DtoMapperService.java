@@ -90,8 +90,8 @@ public class DtoMapperService {
     public OrderDto mapOrderToDto(Order order) {
         OrderDto dto = new OrderDto();
         dto.setId(order.getId());
-        dto.setUser(order.getUser().getId());
-        dto.setApartments(order.getApartments().stream().map(Apartment::getId).toList());
+        dto.setUser(mapUserToDto(order.getUser()));
+        dto.setApartments(order.getApartments().stream().map(this::mapApartmentToDto).toList());
         dto.setState(order.getState());
         dto.setPrice(order.getPrice());
         dto.setDescription(order.getDescription());
@@ -107,8 +107,8 @@ public class DtoMapperService {
     public Order mapToOrder(OrderDto dto) {
         Order order = new Order();
         order.setId(dto.getId());
-        order.setUser(userService.getById(dto.getUser()));
-        order.setApartments(dto.getApartments().stream().map(apartmentService::getById).toList());
+        order.setUser(mapToUser(dto.getUser()));
+        order.setApartments(dto.getApartments().stream().map(this::mapToApartment).toList());
         order.setState(dto.getState());
         order.setPrice(dto.getPrice());
         order.setDescription(dto.getDescription());
@@ -117,6 +117,17 @@ public class DtoMapperService {
 
     public Order mapToOrder(AddedOrderDto dto) {
         Order order = new Order();
+        order.setUser(userService.getById(dto.getUser()));
+        order.setApartments(dto.getApartments().stream().map(apartmentService::getById).toList());
+        order.setState(dto.getState());
+        order.setPrice(dto.getPrice());
+        order.setDescription(dto.getDescription());
+        return order;
+    }
+
+    public Order mapToOrder(UpdatedOrderDto dto) {
+        Order order = new Order();
+        order.setId(dto.getId());
         order.setUser(userService.getById(dto.getUser()));
         order.setApartments(dto.getApartments().stream().map(apartmentService::getById).toList());
         order.setState(dto.getState());

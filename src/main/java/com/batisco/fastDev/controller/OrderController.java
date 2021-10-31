@@ -2,6 +2,7 @@ package com.batisco.fastDev.controller;
 
 import com.batisco.fastDev.dto.AddedOrderDto;
 import com.batisco.fastDev.dto.OrderDto;
+import com.batisco.fastDev.dto.UpdatedOrderDto;
 import com.batisco.fastDev.model.Order;
 import com.batisco.fastDev.sevice.DtoMapperService;
 import com.batisco.fastDev.sevice.OrderService;
@@ -57,7 +58,7 @@ public class OrderController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<OrderDto> updateApartment(@RequestBody OrderDto dto) {
+    public ResponseEntity<OrderDto> updateApartment(@RequestBody UpdatedOrderDto dto) {
         logger.info("Update order " + dto);
         Order order = orderService.update(mapper.mapToOrder(dto));
         OrderDto response = mapper.mapOrderToDto(order);

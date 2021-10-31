@@ -42,7 +42,7 @@ public class ApartmentController {
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<ApartmentDto> getById(@RequestParam UUID apartmentId) {
+    public ResponseEntity<ApartmentDto> getById(@RequestParam("id") UUID apartmentId) {
         logger.info("Get apartment by id " + apartmentId);
         ApartmentDto response = mapper.mapApartmentToDto(apartmentService.getById(apartmentId));
         return ResponseEntity.status(HttpStatus.OK).body(response);

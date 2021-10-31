@@ -42,6 +42,14 @@ public class ExceptionResolver {
                 body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
+    @ExceptionHandler(value = UnknownOrderException.class)
+    public ResponseEntity<ResponseException> handle(UnknownOrderException e) {
+        logger.error("Unknown order exception", e);
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
+    }
+
     @ExceptionHandler(value = UnknownApartmentException.class)
     public ResponseEntity<ResponseException> handle(UnknownApartmentException e) {
         logger.error("Unknown apartment exception", e);

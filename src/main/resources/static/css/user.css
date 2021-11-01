@@ -8,29 +8,34 @@ body {
 }
 
 
-.userForm label {
-    display: block;
-    color: #f57242;
-    margin-bottom: 25px;
-    font-size: 18px;
-    position: relative;
-    text-align: left;
+.userForm {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-auto-rows: 50px;
+    grid-row-gap: 10px;
 }
-.userForm label input {
+.userForm label {
+    align-self: center;
+    text-align: left;
+    color: #f57242;
+    font-size: 18px;
+}
+.userForm input {
+    align-self: center;
     border-radius: 12px;
     border: none;
     outline: none;
     background: #f0f0f0;
-    width: 75%;
-    height: 25px;
-    position: absolute;
-    left: 50px;
+    height: 32px;
 }
 
 
 .controlButtonPanel {
-    margin: 20px 0;
-    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 40px;
+    grid-column-gap: 10px;
+    margin-top: 10px;
 }
 .controlButtonPanel button {
     color: #f57242;
@@ -38,7 +43,6 @@ body {
     font-size: 22px;
     border-radius: 16px;
     padding: 6px;
-    width: 130px;
 }
 .controlButtonPanel button img {
     display: inline-block;

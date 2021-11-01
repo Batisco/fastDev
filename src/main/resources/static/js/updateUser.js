@@ -1,4 +1,4 @@
-loadUser(getUserIdFromUrl(window.location.href)).
+loadUser(getUserIdFromUrl()).
     then(response => refreshForm(response)).
     catch(error => alert(error));
 
@@ -17,7 +17,8 @@ document.getElementById("backButton").onclick = function() {
     window.location.replace("/ui/users/getAll");
 }
 
-function getUserIdFromUrl(url) {
+
+function getUserIdFromUrl() {
     return new URL(window.location.href).searchParams.get("id");
 }
 

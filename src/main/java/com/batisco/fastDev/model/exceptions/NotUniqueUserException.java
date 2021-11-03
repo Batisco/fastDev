@@ -1,6 +1,6 @@
 package com.batisco.fastDev.model.exceptions;
 
-public class NotUniqueUserException extends RuntimeException {
+public class NotUniqueUserException extends AbstractDomainException {
 
     public NotUniqueUserException() {
     }

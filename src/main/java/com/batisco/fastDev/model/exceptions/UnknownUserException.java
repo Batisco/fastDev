@@ -1,6 +1,6 @@
 package com.batisco.fastDev.model.exceptions;
 
-public class UnknownUserException extends RuntimeException {
+public class UnknownUserException extends AbstractDomainException {
 
     public UnknownUserException() {
     }

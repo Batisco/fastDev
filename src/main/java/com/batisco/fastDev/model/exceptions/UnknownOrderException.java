@@ -1,6 +1,6 @@
 package com.batisco.fastDev.model.exceptions;
 
-public class UnknownOrderException extends RuntimeException {
+public class UnknownOrderException extends AbstractDomainException {
 
     public UnknownOrderException() {
     }

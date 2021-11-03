@@ -26,41 +26,9 @@ public class ExceptionResolver {
                 body(new ResponseException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
     }
 
-    @ExceptionHandler(value = NegativeValueException.class)
-    public ResponseEntity<ResponseException> handle(NegativeValueException e) {
-        logger.error("Negative value exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = NotUniqueUserException.class)
-    public ResponseEntity<ResponseException> handle(NotUniqueUserException e) {
-        logger.error("Duplicate user name", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = UnknownOrderException.class)
-    public ResponseEntity<ResponseException> handle(UnknownOrderException e) {
-        logger.error("Unknown order exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = UnknownApartmentException.class)
-    public ResponseEntity<ResponseException> handle(UnknownApartmentException e) {
-        logger.error("Unknown apartment exception", e);
-        return ResponseEntity.
-                status(HttpStatus.BAD_REQUEST).
-                body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
-
-    @ExceptionHandler(value = UnknownUserException.class)
-    public ResponseEntity<ResponseException> handle(UnknownUserException e) {
-        logger.error("Unknown user exception", e);
+    @ExceptionHandler(value = AbstractDomainException.class)
+    public ResponseEntity<ResponseException> handle(AbstractDomainException e) {
+        logger.error(e.getMessage(), e);
         return ResponseEntity.
                 status(HttpStatus.BAD_REQUEST).
                 body(new ResponseException(HttpStatus.BAD_REQUEST, e.getMessage()));

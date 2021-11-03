@@ -1,3 +1,5 @@
+"use strict";
+
 loadUser(getUserIdFromUrl()).
     then(response => refreshForm(response)).
     catch(error => alert(error));

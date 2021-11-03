@@ -20,7 +20,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "orders_to_apartments",
             joinColumns = @JoinColumn(name = "o_id", referencedColumnName = "order_id"),

@@ -1,23 +1,21 @@
-document.getElementById("saveUserButton").onclick = function() {
-    let form = document.forms.userForm;
-    let user = getUserFromForm(form);
-    saveUser(user).
-        then(response => {
-            refreshForm(response);
-            alert("User saved successfully");
-        }).
-        catch(error => alert(error));
-}
+"use strict";
 
 document.getElementById("backButton").onclick = function() {
     window.location.replace("/ui/users/getAll");
 }
 
-
-function refreshForm(user) {
+document.getElementById("saveUserButton").onclick = function() {
     let form = document.forms.userForm;
-    form.elements.name.value = user.name;
+    let user = getUserFromForm(form);
+    saveUser(user).
+        then(response => {
+            //refreshForm(response);
+            //alert("User saved successfully");
+            alert(response);
+        }).
+        catch(error => alert(error));
 }
+
 
 async function saveUser(user) {
     return fetch(
@@ -32,10 +30,14 @@ async function saveUser(user) {
         }
     ).
     then(response => {
-        if(response.ok) return response;
-        else throw new Error("Error");
-    }).
-    then(response => response.json());
+        if(response.ok) return response.json();
+        else return response.text();
+    });
+}
+
+function refreshForm(user) {
+    let form = document.forms.userForm;
+    form.elements.name.value = user.name;
 }
 
 function getUserFromForm(form) {

@@ -1,3 +1,5 @@
+"use strict";
+
 refreshTable();
 
 document.getElementById("addUserButton").onclick = function() {

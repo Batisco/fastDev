@@ -1,6 +1,6 @@
 package com.batisco.fastDev.model.exceptions;
 
-public class UnknownApartmentException extends RuntimeException {
+public class UnknownApartmentException extends AbstractDomainException {
 
     public UnknownApartmentException() {
     }

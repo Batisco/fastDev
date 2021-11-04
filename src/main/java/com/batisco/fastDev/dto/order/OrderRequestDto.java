@@ -1,4 +1,4 @@
-package com.batisco.fastDev.dto;
+package com.batisco.fastDev.dto.order;
 
 import com.batisco.fastDev.model.OrderState;
 
@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class UpdatedOrderDto {
+public class OrderRequestDto {
 
     private UUID id;
     private UUID user;
-    private List<UUID> apartments;
     private OrderState state;
     private BigDecimal price;
     private String description;
+    private List<UUID> apartments;
 
-    public UpdatedOrderDto() {
+    public OrderRequestDto() {
 
     }
 
@@ -72,7 +72,7 @@ public class UpdatedOrderDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UpdatedOrderDto that = (UpdatedOrderDto) o;
+        OrderRequestDto that = (OrderRequestDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(user, that.user) &&
                 Objects.equals(apartments, that.apartments) &&

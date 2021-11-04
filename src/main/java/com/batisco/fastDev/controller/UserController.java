@@ -1,7 +1,7 @@
 package com.batisco.fastDev.controller;
 
-import com.batisco.fastDev.dto.AddedUserDto;
-import com.batisco.fastDev.dto.UserDto;
+import com.batisco.fastDev.dto.user.UserRequestDto;
+import com.batisco.fastDev.dto.user.UserResponseDto;
 import com.batisco.fastDev.model.User;
 import com.batisco.fastDev.sevice.DtoMapperService;
 import com.batisco.fastDev.sevice.UserService;
@@ -34,32 +34,32 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         logger.info("get all users");
-        List<UserDto> response = mapper.mapUsersToDto(userService.getAll());
+        List<UserResponseDto> response = mapper.mapUsersToDto(userService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<UserDto> getById(@RequestParam UUID id) {
+    public ResponseEntity<UserResponseDto> getById(@RequestParam UUID id) {
         logger.info("get user by id = " + id);
-        UserDto response = mapper.mapUserToDto(userService.getById(id));
+        UserResponseDto response = mapper.mapUserToDto(userService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UserDto> addUser(@RequestBody AddedUserDto dto) {
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto dto) {
         logger.info("add new user = " + dto);
         User userWithoutId = mapper.mapToUser(dto);
-        UserDto response = mapper.mapUserToDto(userService.add(userWithoutId));
+        UserResponseDto response = mapper.mapUserToDto(userService.add(userWithoutId));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto) {
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto dto) {
         logger.info("update user = " + dto);
         User user = mapper.mapToUser(dto);
-        UserDto response = mapper.mapUserToDto(userService.update(user));
+        UserResponseDto response = mapper.mapUserToDto(userService.update(user));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

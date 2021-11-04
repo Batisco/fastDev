@@ -1,11 +1,11 @@
-package com.batisco.fastDev.dto;
+package com.batisco.fastDev.dto.apartment;
 
 import com.batisco.fastDev.model.ApartmentLevel;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class ApartmentDto {
+public class ApartmentShortResponseDto {
 
     private UUID id;
     private String address;
@@ -13,7 +13,7 @@ public class ApartmentDto {
     private String description;
     private ApartmentLevel level;
 
-    public ApartmentDto() {
+    public ApartmentShortResponseDto() {
 
     }
 
@@ -61,7 +61,7 @@ public class ApartmentDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApartmentDto that = (ApartmentDto) o;
+        ApartmentShortResponseDto that = (ApartmentShortResponseDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(number, that.number) &&
@@ -76,7 +76,7 @@ public class ApartmentDto {
 
     @Override
     public String toString() {
-        return "ApartmentDto{" +
+        return "ApartmentShortResponseDto{" +
                 "id=" + id +
                 ", address='" + address + '\'' +
                 ", number=" + number +

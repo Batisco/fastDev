@@ -1,7 +1,7 @@
 package com.batisco.fastDev.controller;
 
-import com.batisco.fastDev.dto.AddedApartmentDto;
-import com.batisco.fastDev.dto.ApartmentDto;
+import com.batisco.fastDev.dto.apartment.ApartmentRequestDto;
+import com.batisco.fastDev.dto.apartment.ApartmentResponseDto;
 import com.batisco.fastDev.model.Apartment;
 import com.batisco.fastDev.sevice.ApartmentService;
 import com.batisco.fastDev.sevice.DtoMapperService;
@@ -35,32 +35,32 @@ public class ApartmentController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ApartmentDto>> getAll() {
+    public ResponseEntity<List<ApartmentResponseDto>> getAll() {
         logger.info("Get all apartments");
-        List<ApartmentDto> response = mapper.mapApartmentsToDto(apartmentService.getAll());
+        List<ApartmentResponseDto> response = mapper.mapApartmentsToDto(apartmentService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<ApartmentDto> getById(@RequestParam("id") UUID apartmentId) {
+    public ResponseEntity<ApartmentResponseDto> getById(@RequestParam("id") UUID apartmentId) {
         logger.info("Get apartment by id " + apartmentId);
-        ApartmentDto response = mapper.mapApartmentToDto(apartmentService.getById(apartmentId));
+        ApartmentResponseDto response = mapper.mapApartmentToDto(apartmentService.getById(apartmentId));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApartmentDto> addApartment(@RequestBody AddedApartmentDto dto) {
+    public ResponseEntity<ApartmentResponseDto> addApartment(@RequestBody ApartmentRequestDto dto) {
         logger.info("Add new apartment " + dto);
         Apartment apartment = apartmentService.add(mapper.mapToApartment(dto));
-        ApartmentDto response = mapper.mapApartmentToDto(apartment);
+        ApartmentResponseDto response = mapper.mapApartmentToDto(apartment);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ApartmentDto> updateApartment(@RequestBody ApartmentDto dto) {
+    public ResponseEntity<ApartmentResponseDto> updateApartment(@RequestBody ApartmentRequestDto dto) {
         logger.info("Update apartment " + dto);
         Apartment apartment = apartmentService.update(mapper.mapToApartment(dto));
-        ApartmentDto response = mapper.mapApartmentToDto(apartment);
+        ApartmentResponseDto response = mapper.mapApartmentToDto(apartment);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

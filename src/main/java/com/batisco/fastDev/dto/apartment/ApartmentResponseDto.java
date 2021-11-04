@@ -1,39 +1,22 @@
-package com.batisco.fastDev.model;
+package com.batisco.fastDev.dto.apartment;
 
-import javax.persistence.*;
+import com.batisco.fastDev.dto.furniture.FurnitureResponseDto;
+import com.batisco.fastDev.model.ApartmentLevel;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
-@Table(
-        name = "apartments",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"address", "number"})
-)
-public class Apartment {
+public class ApartmentResponseDto {
 
-    @Id
-    @Column(name = "apartment_id", nullable = false)
     private UUID id;
-
-    @Column(name = "address", nullable = false)
     private String address;
-
-    @Column(name = "number", nullable = false)
     private Integer number;
-
-    @Column(name = "description")
     private String description;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "level", nullable = false)
     private ApartmentLevel level;
+    private List<FurnitureResponseDto> furnitures;
 
-    @OneToMany(mappedBy = "apartment")
-    private List<Furniture> furnitures;
-
-    public Apartment() {
+    public ApartmentResponseDto() {
 
     }
 
@@ -77,11 +60,11 @@ public class Apartment {
         this.level = level;
     }
 
-    public List<Furniture> getFurnitures() {
+    public List<FurnitureResponseDto> getFurnitures() {
         return furnitures;
     }
 
-    public void setFurnitures(List<Furniture> furnitures) {
+    public void setFurnitures(List<FurnitureResponseDto> furnitures) {
         this.furnitures = furnitures;
     }
 
@@ -89,18 +72,23 @@ public class Apartment {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Apartment apartment = (Apartment) o;
-        return Objects.equals(id, apartment.id);
+        ApartmentResponseDto that = (ApartmentResponseDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(number, that.number) &&
+                Objects.equals(description, that.description) &&
+                level == that.level &&
+                Objects.equals(furnitures, that.furnitures);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, address, number, description, level, furnitures);
     }
 
     @Override
     public String toString() {
-        return "Apartment{" +
+        return "ApartmentResponseDto{" +
                 "id=" + id +
                 ", address='" + address + '\'' +
                 ", number=" + number +

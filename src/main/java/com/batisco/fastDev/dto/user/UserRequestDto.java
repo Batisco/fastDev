@@ -1,14 +1,14 @@
-package com.batisco.fastDev.dto;
+package com.batisco.fastDev.dto.user;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class UserDto {
+public class UserRequestDto {
 
     private UUID id;
     private String name;
 
-    public UserDto() {
+    public UserRequestDto() {
     }
 
     public UUID getId() {
@@ -31,7 +31,7 @@ public class UserDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
+        UserRequestDto userDto = (UserRequestDto) o;
         return Objects.equals(id, userDto.id) &&
                 Objects.equals(name, userDto.name);
     }

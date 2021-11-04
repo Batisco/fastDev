@@ -1,8 +1,7 @@
 package com.batisco.fastDev.controller;
 
-import com.batisco.fastDev.dto.AddedOrderDto;
-import com.batisco.fastDev.dto.OrderDto;
-import com.batisco.fastDev.dto.UpdatedOrderDto;
+import com.batisco.fastDev.dto.order.OrderResponseDto;
+import com.batisco.fastDev.dto.order.OrderRequestDto;
 import com.batisco.fastDev.model.Order;
 import com.batisco.fastDev.sevice.DtoMapperService;
 import com.batisco.fastDev.sevice.OrderService;
@@ -36,32 +35,32 @@ public class OrderController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<OrderDto>> getAll() {
+    public ResponseEntity<List<OrderResponseDto>> getAll() {
         logger.info("Get all orders");
-        List<OrderDto> response = mapper.mapOrdersToDto(orderService.getAll());
+        List<OrderResponseDto> response = mapper.mapOrdersToDto(orderService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<OrderDto> getById(@RequestParam("id") UUID orderId) {
+    public ResponseEntity<OrderResponseDto> getById(@RequestParam("id") UUID orderId) {
         logger.info("Get order by id " + orderId);
-        OrderDto response = mapper.mapOrderToDto(orderService.getById(orderId));
+        OrderResponseDto response = mapper.mapOrderToDto(orderService.getById(orderId));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<OrderDto> addApartment(@RequestBody AddedOrderDto dto) {
+    public ResponseEntity<OrderResponseDto> addApartment(@RequestBody OrderRequestDto dto) {
         logger.info("Add new order " + dto);
         Order order = orderService.add(mapper.mapToOrder(dto));
-        OrderDto response = mapper.mapOrderToDto(order);
+        OrderResponseDto response = mapper.mapOrderToDto(order);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<OrderDto> updateApartment(@RequestBody UpdatedOrderDto dto) {
+    public ResponseEntity<OrderResponseDto> updateApartment(@RequestBody OrderRequestDto dto) {
         logger.info("Update order " + dto);
         Order order = orderService.update(mapper.mapToOrder(dto));
-        OrderDto response = mapper.mapOrderToDto(order);
+        OrderResponseDto response = mapper.mapOrderToDto(order);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

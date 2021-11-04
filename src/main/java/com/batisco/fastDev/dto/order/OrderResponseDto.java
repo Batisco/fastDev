@@ -1,5 +1,8 @@
-package com.batisco.fastDev.dto;
+package com.batisco.fastDev.dto.order;
 
+import com.batisco.fastDev.dto.apartment.ApartmentShortResponseDto;
+import com.batisco.fastDev.dto.user.UserResponseDto;
+import com.batisco.fastDev.dto.apartment.ApartmentResponseDto;
 import com.batisco.fastDev.model.OrderState;
 
 import java.math.BigDecimal;
@@ -7,31 +10,40 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class AddedOrderDto {
+public class OrderResponseDto {
 
-    private UUID user;
-    private List<UUID> apartments;
+    private UUID id;
+    private UserResponseDto user;
     private OrderState state;
     private BigDecimal price;
     private String description;
+    private List<ApartmentShortResponseDto> apartments;
 
-    public AddedOrderDto() {
+    public OrderResponseDto() {
 
     }
 
-    public UUID getUser() {
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UserResponseDto getUser() {
         return user;
     }
 
-    public void setUser(UUID user) {
+    public void setUser(UserResponseDto user) {
         this.user = user;
     }
 
-    public List<UUID> getApartments() {
+    public List<ApartmentShortResponseDto> getApartments() {
         return apartments;
     }
 
-    public void setApartments(List<UUID> apartments) {
+    public void setApartments(List<ApartmentShortResponseDto> apartments) {
         this.apartments = apartments;
     }
 
@@ -63,23 +75,25 @@ public class AddedOrderDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AddedOrderDto that = (AddedOrderDto) o;
-        return Objects.equals(user, that.user) &&
-                Objects.equals(apartments, that.apartments) &&
-                state == that.state &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(description, that.description);
+        OrderResponseDto orderDto = (OrderResponseDto) o;
+        return Objects.equals(id, orderDto.id) &&
+                Objects.equals(user, orderDto.user) &&
+                Objects.equals(apartments, orderDto.apartments) &&
+                state == orderDto.state &&
+                Objects.equals(price, orderDto.price) &&
+                Objects.equals(description, orderDto.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, apartments, state, price, description);
+        return Objects.hash(id, user, apartments, state, price, description);
     }
 
     @Override
     public String toString() {
-        return "AddedOrder{" +
-                "user=" + user +
+        return "OrderDto{" +
+                "id=" + id +
+                ", user=" + user +
                 ", apartments=" + apartments +
                 ", state=" + state +
                 ", price=" + price +

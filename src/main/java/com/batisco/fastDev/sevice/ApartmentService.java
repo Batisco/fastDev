@@ -38,6 +38,11 @@ public class ApartmentService {
                 orElseThrow(() -> new UnknownApartmentException("Unknown apartment with id=" + apartmentId));
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Apartment> getByFurnitureId(UUID furnitureId) {
+        return Optional.empty();
+    }
+
     @Transactional
     public Apartment add(Apartment apartmentWithoutDto) {
         try {

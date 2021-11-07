@@ -7,6 +7,8 @@ import com.batisco.fastDev.model.exceptions.UnknownApartmentException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +27,10 @@ public class ApartmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Apartment> getAll() {
-        return apartmentRepository.findAll();
+    public Page<Apartment> getAll(Pageable pageable,
+                                  Optional<String> hasOwner,
+                                  Optional<List<UUID>> exclude) {
+        return apartmentRepository.getByFilter(pageable, hasOwner, exclude);
     }
 
     @Transactional(readOnly = true)
@@ -34,13 +38,13 @@ public class ApartmentService {
         if(apartmentId == null)
             throw new UnknownApartmentException("Unknown apartment with id=" + apartmentId);
 
-        return Optional.ofNullable(apartmentRepository.getById(apartmentId)).
+        return apartmentRepository.getById(apartmentId).
                 orElseThrow(() -> new UnknownApartmentException("Unknown apartment with id=" + apartmentId));
     }
 
     @Transactional(readOnly = true)
     public Optional<Apartment> getByFurnitureId(UUID furnitureId) {
-        return Optional.empty();
+        return apartmentRepository.getByFurnitureId(furnitureId);
     }
 
     @Transactional
@@ -48,7 +52,9 @@ public class ApartmentService {
         try {
             apartmentWithoutDto.setId(UUID.randomUUID());
 
-            apartmentRepository.saveAndFlush(apartmentWithoutDto);
+            apartmentRepository.add(apartmentWithoutDto);
+            apartmentWithoutDto.getFurnitures().forEach(furniture -> furniture.setApartment(apartmentWithoutDto));
+            apartmentRepository.flush();
 
             return apartmentWithoutDto;
         } catch(DataIntegrityViolationException e) {
@@ -64,7 +70,9 @@ public class ApartmentService {
     public Apartment update(Apartment apartment) {
         try {
             if(apartment.getId() != null && apartmentRepository.existsById(apartment.getId())) {
-                apartmentRepository.saveAndFlush(apartment);
+                apartmentRepository.update(apartment);
+                apartmentRepository.flush();
+
                 return apartment;
             }
             throw new UnknownApartmentException("Unknown apartment with id=" + apartment.getId());

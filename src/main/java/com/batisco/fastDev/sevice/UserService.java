@@ -7,10 +7,11 @@ import com.batisco.fastDev.model.exceptions.UnknownUserException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,8 +25,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getAll() {
-        return userRepository.getAllUser();
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.getByFilter(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +43,7 @@ public class UserService {
         try {
             userWithoutId.setId(UUID.randomUUID());
 
-            userRepository.addUser(userWithoutId);
+            userRepository.add(userWithoutId);
             userRepository.flush();
 
             return userWithoutId;
@@ -55,7 +56,7 @@ public class UserService {
     public User update(User user) {
         try {
             if(userRepository.existsById(user.getId())) {
-                userRepository.updateUser(user);
+                userRepository.update(user);
                 userRepository.flush();
                 return user;
             }

@@ -10,11 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,9 +36,9 @@ public class OrderController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<OrderResponseDto>> getAll() {
-        logger.info("Get all orders");
-        List<OrderResponseDto> response = mapper.mapOrdersToDto(orderService.getAll());
+    public ResponseEntity<Page<OrderResponseDto>> getAll(Pageable pageable) {
+        logger.info("Get all orders. Params: pageable={}", pageable);
+        Page<OrderResponseDto> response = mapper.mapOrdersToDto(orderService.getAll(pageable));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

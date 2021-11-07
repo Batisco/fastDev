@@ -10,11 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,9 +38,13 @@ public class ApartmentController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ApartmentResponseDto>> getAll() {
-        logger.info("Get all apartments");
-        List<ApartmentResponseDto> response = mapper.mapApartmentsToDto(apartmentService.getAll());
+    public ResponseEntity<Page<ApartmentResponseDto>> getAll(Pageable pageable,
+                                                             @RequestParam Optional<String> hasActualOrder,
+                                                             @RequestParam Optional<List<UUID>> exclude) {
+        logger.info("Get all apartments. Parameters: hasOwner={} exclude{} pageable={}", hasActualOrder, exclude, pageable);
+        Page<ApartmentResponseDto> response = mapper.mapApartmentsToDto(
+                apartmentService.getAll(pageable, hasActualOrder, exclude)
+        );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

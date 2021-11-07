@@ -10,11 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,10 +38,14 @@ public class FurnitureController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<FurnitureResponseDto>> getAll() {
-        logger.info("Get all furnitures");
-        List<Furniture> furnitures = furnitureService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapFurnituresToDto(furnitures));
+    public ResponseEntity<Page<FurnitureResponseDto>> getAll(Pageable pageable,
+                                                             @RequestParam Optional<String> hasApartment,
+                                                             @RequestParam Optional<List<UUID>> exclude) {
+        logger.info("Get all furnitures. Parameters: hasOwner={} exclude{} pageable={}", hasApartment, exclude, pageable);
+        Page<FurnitureResponseDto> response = mapper.mapFurnituresToDto(
+                furnitureService.getAll(pageable, hasApartment, exclude)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/getById")

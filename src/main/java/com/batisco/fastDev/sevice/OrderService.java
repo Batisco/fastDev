@@ -5,11 +5,12 @@ import com.batisco.fastDev.model.Order;
 import com.batisco.fastDev.model.exceptions.UnknownOrderException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
 @Service
@@ -26,8 +27,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Order> getAll() {
-        return orderRepository.findAll();
+    public Page<Order> getAll(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -35,8 +36,11 @@ public class OrderService {
         if(orderId == null)
             throw new UnknownOrderException("Unknown order with id = " + orderId);
 
-        return Optional.ofNullable(orderRepository.getById(orderId)).
-                orElseThrow(() -> new UnknownOrderException("Unknown order with id = " + orderId));
+        try {
+            return orderRepository.getById(orderId);
+        } catch(EntityNotFoundException e) {
+            throw new UnknownOrderException("Unknown order with id = " + orderId);
+        }
     }
 
     @Transactional

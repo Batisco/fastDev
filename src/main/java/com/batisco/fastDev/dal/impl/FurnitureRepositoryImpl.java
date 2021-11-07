@@ -2,13 +2,20 @@ package com.batisco.fastDev.dal.impl;
 
 import com.batisco.fastDev.dal.FurnitureRepository;
 import com.batisco.fastDev.model.Furniture;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Repository
 public class FurnitureRepositoryImpl implements FurnitureRepository {
@@ -21,12 +28,12 @@ public class FurnitureRepositoryImpl implements FurnitureRepository {
     }
 
     @Override
-    public void addFurniture(Furniture furniture) {
+    public void add(Furniture furniture) {
         entityManager.persist(furniture);
     }
 
     @Override
-    public void updateFurniture(Furniture furniture) {
+    public void update(Furniture furniture) {
         entityManager.merge(furniture);
     }
 
@@ -41,11 +48,33 @@ public class FurnitureRepositoryImpl implements FurnitureRepository {
     }
 
     @Override
-    public List<Furniture> getAllFurniture() {
-        return entityManager.createNativeQuery(
-                "select * from furnitures;",
-                Furniture.class
-        ).getResultList();
+    public Page<Furniture> getByFilter(Pageable pageable,
+                                       Optional<String> hasApartment,
+                                       Optional<List<UUID>> exclude) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Furniture> queryFurniture = cb.createQuery(Furniture.class);
+        Root<Furniture> furniture = queryFurniture.from(Furniture.class);
+        queryFurniture.
+                where(cb.and(
+                        Stream.of(
+                                hasApartment.map(s -> cb.isNull(furniture.get("apartment"))),
+                                exclude.map(list -> cb.not(furniture.get("id").in(list)))
+                        ).filter(Optional::isPresent).
+                                map(Optional::get).
+                                toArray(Predicate[]::new)
+                )).
+                orderBy(cb.asc(furniture.get("type")), cb.asc(furniture.get("id")));
+
+        TypedQuery<Furniture> tq = entityManager.createQuery(queryFurniture).
+                setFirstResult((int)pageable.getOffset()).
+                setMaxResults(pageable.getPageSize());
+
+        CriteriaQuery<Long> queryCount = cb.createQuery(Long.class);
+        queryCount.select(cb.count(queryCount.from(Furniture.class)));
+        Long count = entityManager.createQuery(queryCount).getSingleResult();
+
+        return new PageImpl<>(tq.getResultList(), pageable, count);
     }
 
     @Override

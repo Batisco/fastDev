@@ -8,6 +8,8 @@ import com.batisco.fastDev.model.exceptions.UnknownUserException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +28,10 @@ public class FurnitureService {
     }
 
     @Transactional(readOnly = true)
-    public List<Furniture> getAll() {
-        return furnitureRepository.getAllFurniture();
+    public Page<Furniture> getAll(Pageable pageable,
+                                  Optional<String> hasOwner,
+                                  Optional<List<UUID>> exclude) {
+        return furnitureRepository.getByFilter(pageable, hasOwner, exclude);
     }
 
     @Transactional(readOnly = true)
@@ -39,11 +43,12 @@ public class FurnitureService {
                 orElseThrow(() -> new UnknownFurnitureException("Unknown furniture with id = " + furnitureId));
     }
 
+    @Transactional
     public Furniture add(Furniture furnitureWithoutId) {
         try {
             furnitureWithoutId.setId(UUID.randomUUID());
 
-            furnitureRepository.addFurniture(furnitureWithoutId);
+            furnitureRepository.add(furnitureWithoutId);
             furnitureRepository.flush();
 
             return furnitureWithoutId;
@@ -54,10 +59,11 @@ public class FurnitureService {
         }
     }
 
+    @Transactional
     public Furniture update(Furniture furniture) {
         try {
             if(furnitureRepository.existsById(furniture.getId())) {
-                furnitureRepository.updateFurniture(furniture);
+                furnitureRepository.update(furniture);
                 furnitureRepository.flush();
                 return furniture;
             }

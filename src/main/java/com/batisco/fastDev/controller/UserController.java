@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +36,9 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        logger.info("get all users");
-        List<UserResponseDto> response = mapper.mapUsersToDto(userService.getAll());
+    public ResponseEntity<Page<UserResponseDto>> getAllUsers(Pageable pageable) {
+        logger.info("Get all users. Parameters: Pageable={}", pageable);
+        Page<UserResponseDto> response = mapper.mapUsersToDto(userService.getAll(pageable));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

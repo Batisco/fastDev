@@ -4,17 +4,24 @@ import com.batisco.fastDev.dal.UserRepository;
 import com.batisco.fastDev.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Autowired
     public UserRepositoryImpl(EntityManager entityManager) {
@@ -22,12 +29,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void addUser(User user) {
+    public void add(User user) {
         entityManager.persist(user);
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         entityManager.merge(user);
     }
 
@@ -42,11 +49,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getAllUser() {
-        return entityManager.createNativeQuery(
-                "select * from users",
-                User.class
-        ).getResultList();
+    public Page<User> getByFilter(Pageable pageable) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<User> queryUser = cb.createQuery(User.class);
+        Root<User> user = queryUser.from(User.class);
+        queryUser.orderBy(cb.asc(user.get("name")));
+
+        TypedQuery<User> tq = entityManager.createQuery(queryUser).
+                setFirstResult((int)pageable.getOffset()).
+                setMaxResults(pageable.getPageSize());
+
+        CriteriaQuery<Long> queryCount = cb.createQuery(Long.class);
+        queryCount.select(cb.count(queryCount.from(User.class)));
+        Long count = entityManager.createQuery(queryCount).getSingleResult();
+
+        return new PageImpl<>(tq.getResultList(), pageable, count);
     }
 
     @Override

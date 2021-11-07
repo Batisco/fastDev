@@ -15,9 +15,9 @@ import com.batisco.fastDev.model.Order;
 import com.batisco.fastDev.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +43,11 @@ public class DtoMapperService {
         dto.setNumber(apartment.getNumber());
         dto.setDescription(apartment.getDescription());
         dto.setLevel(apartment.getLevel());
-        dto.setFurnitures(mapFurnituresToDto(apartment.getFurnitures()));
+        dto.setFurnitures(
+                apartment.getFurnitures().stream().
+                map(this::mapFurnitureToDto).
+                toList()
+        );
         return dto;
     }
 
@@ -59,10 +63,8 @@ public class DtoMapperService {
         return dto;
     }
 
-    public List<ApartmentResponseDto> mapApartmentsToDto(List<Apartment> apartments) {
-        return apartments.stream().
-                map(this::mapApartmentToDto).
-                toList();
+    public Page<ApartmentResponseDto> mapApartmentsToDto(Page<Apartment> apartments) {
+        return apartments.map(this::mapApartmentToDto);
     }
 
     public Apartment mapToApartment(ApartmentRequestDto dto) {
@@ -87,10 +89,8 @@ public class DtoMapperService {
         return dto;
     }
 
-    public List<UserResponseDto> mapUsersToDto(List<User> users) {
-        return users.stream().
-                map(this::mapUserToDto).
-                toList();
+    public Page<UserResponseDto> mapUsersToDto(Page<User> users) {
+        return users.map(this::mapUserToDto);
     }
 
     public User mapToUser(UserRequestDto dto) {
@@ -113,10 +113,8 @@ public class DtoMapperService {
         return dto;
     }
 
-    public List<OrderResponseDto> mapOrdersToDto(List<Order> orders) {
-        return orders.stream().
-                map(this::mapOrderToDto).
-                toList();
+    public Page<OrderResponseDto> mapOrdersToDto(Page<Order> orders) {
+        return orders.map(this::mapOrderToDto);
     }
 
     public Order mapToOrder(OrderRequestDto dto) {
@@ -137,15 +135,13 @@ public class DtoMapperService {
         dto.setId(furniture.getId());
         dto.setPrice(furniture.getPrice());
         dto.setType(furniture.getType());
-        dto.setApartmentId(furniture.getApartment().getId());
+        dto.setApartmentId(furniture.getApartment() != null ? furniture.getApartment().getId() : null);
 
         return dto;
     }
 
-    public List<FurnitureResponseDto> mapFurnituresToDto(List<Furniture> furnitures) {
-        return furnitures.stream().
-                map(this::mapFurnitureToDto).
-                collect(Collectors.toList());
+    public Page<FurnitureResponseDto> mapFurnituresToDto(Page<Furniture> furnitures) {
+        return furnitures.map(this::mapFurnitureToDto);
     }
 
     public Furniture mapToFurniture(FurnitureRequestDto dto) {
@@ -158,5 +154,6 @@ public class DtoMapperService {
 
         return furniture;
     }
+
 
 }

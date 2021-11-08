@@ -1,6 +1,7 @@
 package com.batisco.fastDev.dal;
 
 import com.batisco.fastDev.model.Furniture;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

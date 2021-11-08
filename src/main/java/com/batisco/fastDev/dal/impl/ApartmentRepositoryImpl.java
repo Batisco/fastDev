@@ -3,6 +3,8 @@ package com.batisco.fastDev.dal.impl;
 import com.batisco.fastDev.dal.ApartmentRepository;
 import com.batisco.fastDev.model.Apartment;
 import com.batisco.fastDev.model.Order;
+
+import com.batisco.fastDev.model.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,10 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,17 +63,16 @@ public class ApartmentRepositoryImpl implements ApartmentRepository {
         CriteriaQuery<Apartment> queryApartment = cb.createQuery(Apartment.class);
         Root<Apartment> apartment = queryApartment.from(Apartment.class);
         Root<Order> order = queryApartment.from(Order.class);
+        ListJoin<Order, Apartment> orders = order.joinList("apartments");
+        orders.on(cb.or(
+                cb.equal(order.get("state"), OrderState.BOOKED),
+                cb.equal(order.get("state"), OrderState.USED_BY)
+        ));
         queryApartment.
                 select(apartment).
                 where(cb.and(
                         Stream.of(
-                                hasActualOrder.map(s -> cb.and(
-                                        cb.not(apartment.<UUID>get("id").in(order.get("apartments").<UUID>get("id"))),
-                                        cb.or(
-                                                cb.equal(order.get("state"), "BOOKED"),
-                                                cb.equal(order.get("state"), "USED_BY")
-                                        )
-                                )),
+                                hasActualOrder.map(s -> orders.getOn()),
                                 exclude.map(list -> cb.not(apartment.get("id").in(list)))
                         ).filter(Optional::isPresent).
                                 map(Optional::get).

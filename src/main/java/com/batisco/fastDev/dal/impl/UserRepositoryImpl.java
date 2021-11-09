@@ -3,6 +3,7 @@ package com.batisco.fastDev.dal.impl;
 import com.batisco.fastDev.dal.UserRepository;
 import com.batisco.fastDev.model.User;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,22 +11,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.jooq.impl.DSL.*;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private final EntityManager entityManager;
+    private final DSLContext dsl;
 
     @Autowired
-    public UserRepositoryImpl(EntityManager entityManager) {
+    public UserRepositoryImpl(EntityManager entityManager,
+                              DSLContext dsl) {
         this.entityManager = entityManager;
+        this.dsl = dsl;
     }
 
     @Override
@@ -50,21 +52,22 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Page<User> getByFilter(Pageable pageable) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        List<User> users = entityManager.createNativeQuery(
+                dsl.select().
+                        from(table("users")).
+                        limit(inline(pageable.getPageSize())).
+                        offset(inline(pageable.getOffset())).
+                        getSQL(),
+                User.class
+        ).getResultList();
 
-        CriteriaQuery<User> queryUser = cb.createQuery(User.class);
-        Root<User> user = queryUser.from(User.class);
-        queryUser.orderBy(cb.asc(user.get("name")));
+        long count = ((Number)entityManager.createNativeQuery(
+                dsl.selectCount().
+                        from(table("users")).
+                        getSQL()
+        ).getSingleResult()).longValue();
 
-        TypedQuery<User> tq = entityManager.createQuery(queryUser).
-                setFirstResult((int)pageable.getOffset()).
-                setMaxResults(pageable.getPageSize());
-
-        CriteriaQuery<Long> queryCount = cb.createQuery(Long.class);
-        queryCount.select(cb.count(queryCount.from(User.class)));
-        Long count = entityManager.createQuery(queryCount).getSingleResult();
-
-        return new PageImpl<>(tq.getResultList(), pageable, count);
+        return new PageImpl<>(users, pageable, count);
     }
 
     @Override
